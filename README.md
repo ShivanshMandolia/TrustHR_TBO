@@ -1,7 +1,12 @@
 # TrustHR: governed AI for HR lifecycle changes
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?logo=vercel)](https://trusthrtbo-dhgkf771t-shivansh-mandolias-projects.vercel.app/)
+[![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render)](https://trusthr-tbo-1.onrender.com)
+
 > **Architecture, not prompts, decides what agents may do.**
 > A complete, runnable AI-native HR platform built for the TBO Voyage Hacks "AI-Native HR Services" challenge. It follows one employee transfer (**Sales → Finance**) from request to completion, and shows how an AI-driven workflow can stay safe, auditable and easy to change.
+
+🚀 **[Open Live Demo →](https://trusthrtbo-dhgkf771t-shivansh-mandolias-projects.vercel.app/)**
 
 ![Dashboard](docs/screenshots/dashboard.png)
 
@@ -191,7 +196,7 @@ All backend logic lives in [`demo/server.py`](demo/server.py).
 
 ## API reference
 
-Base URL `http://localhost:8000`. `GET /api/state` returns everything the UI renders; the rest are `POST` with a JSON body.
+Base URL `https://trusthr-tbo-1.onrender.com` (or `http://localhost:8000` for local dev). `GET /api/state` returns everything the UI renders; the rest are `POST` with a JSON body.
 
 | Endpoint | Purpose |
 |---|---|
