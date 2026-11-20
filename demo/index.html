@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TrustHR Demo</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1b1f24;--mut:#6b7480;--line:#e2e5ea;--ok:#1a7f4b;--warn:#b26a00;--bad:#c0362c;--acc:#2f5bea}
+@media(prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1d2128;--ink:#e8eaee;--mut:#98a1ad;--line:#2d333c;--ok:#4cc38a;--warn:#e0a040;--bad:#ef6b60;--acc:#7b9bff}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,sans-serif}
+header{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+h1{font-size:18px;margin:0}h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:0 0 10px}
+.pill{padding:2px 9px;border-radius:99px;border:1px solid var(--line);font-size:12px}
+main{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;padding:16px 20px;max-width:1300px;margin:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.wide{grid-column:1/-1}
+button{font:inherit;padding:6px 12px;border-radius:7px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;margin:0 6px 6px 0}
+button:hover{border-color:var(--acc)}button.p{background:var(--acc);color:#fff;border-color:var(--acc)}button.d{color:var(--bad)}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--mut);font-weight:500}
+.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}.mut{color:var(--mut)}
+code{font-family:ui-monospace,monospace;font-size:12px}
+#msg{margin-top:8px;min-height:20px;font-weight:500}
+.scroll{max-height:260px;overflow:auto}
+</style></head><body>
+<header><h1>TrustHR · Sales → Finance transfer (TR-104)</h1>
+<span class="pill" id="pol"></span><span class="pill" id="pause"></span><span class="pill" id="case"></span></header>
+<main>
+<section class="card"><h2>1 · Request &amp; approve</h2>
+<button class="p" onclick="act('request')">Manager: request transfer in chat</button>
+<button class="d" onclick="act('agent_role_change')">Agent tries to change role</button>
+<button class="p" onclick="act('approve')">HR approves (named human)</button>
+<button onclick="act('redeliver')">Redeliver same event</button>
+<div id="msg"></div>
+<p class="mut">Agents can't do reserved actions; only a named human approval commits the transfer. A duplicate event is recognised by the ledger and creates no new tasks.</p></section>
+
+<section class="card"><h2>2 · Controls</h2>
+<button class="d" onclick="act('pause',{on:true})">Kill switch ON</button>
+<button onclick="act('pause',{on:false})">Resume</button>
+<button onclick="act('replay')">Replay decision (original version)</button>
+<button onclick="act('reset')">Reset demo</button>
+<div class="mut" id="stats"></div></section>
+
+<section class="card wide"><h2>3 · Event graph impact plan &amp; tasks</h2>
+<table><thead><tr><th>Node</th><th>Class</th><th>Owner</th><th>Status</th><th>Reason</th><th>Receipt</th><th></th></tr></thead><tbody id="tasks"></tbody></table></section>
+
+<section class="card wide"><h2>4 · Policy change simulator (read-only)</h2>
+<button class="p" onclick="sim()">Simulate v2 vs v1</button>
+<button onclick="act('activate',{version:'v2'})">Activate v2</button>
+<button onclick="act('break_policy')">Edit v2 so a golden test breaks</button>
+<div id="sim" class="mut">Run a simulation to see who changes.</div></section>
+
+<section class="card wide"><h2>5 · Hash-chained audit log</h2><div class="scroll"><table><thead><tr><th>#</th><th>Time</th><th>Actor</th><th>Action</th><th>Outcome</th><th>Policy</th><th>Hash ← prev</th></tr></thead><tbody id="audit"></tbody></table></div></section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const cls=s=>({SUCCEEDED:'ok',ACKED:'ok',AWAITING_ACK:'warn',PARKED:'bad',SKIPPED:'mut',allow:'ok',require_human:'warn',paused:'bad',deny:'bad'}[s]||'');
+async function call(p,b){const r=await fetch('/api/'+p,{method:b?'POST':'GET',body:b?JSON.stringify(b):undefined});return r.json()}
+async function act(p,b){const r=await call(p,b||{});
+  $('msg').textContent=r.msg||(r.verdict?`Gateway verdict: ${r.verdict.toUpperCase()} — ${r.msg}`:'');
+  $('msg').className=r.verdict&&r.verdict!=='allow'?'warn':'';refresh()}
+async function refresh(){const s=await call('state');
+  $('pol').textContent='Active policy: '+s.active+' · golden v1 '+(s.golden.v1?'✓':'✗')+' v2 '+(s.golden.v2?'✓':'✗');
+  $('pause').textContent=s.paused?'⏸ PAUSED':'▶ running';$('pause').className='pill '+(s.paused?'bad':'ok');
+  $('case').textContent=s.case?`${s.case.id}: ${s.case.status}`:'no case';
+  $('stats').innerHTML=`Tasks created: <b>${s.task_count}</b> · Unique executor receipts: <b>${s.receipts}</b> · Pending human approvals: <b>${s.approvals.length}</b>`;
+  $('tasks').innerHTML=s.tasks.map(t=>`<tr><td><code>${t.node}</code></td><td>${t.cls}</td><td>${t.owner}</td><td class="${cls(t.status)}">${t.status}</td><td>${t.reason}</td><td><code>${t.receipt||''}</code></td><td>${t.status==='AWAITING_ACK'?`<button onclick="act('ack',{node:'${t.node}'})">Acknowledge</button>`:''}</td></tr>`).join('')||'<tr><td colspan=7 class="mut">No tasks yet — request and approve the transfer.</td></tr>';
+  $('audit').innerHTML=[...s.audit].reverse().map(a=>`<tr><td>${a.n}</td><td>${a.t}</td><td><code>${a.actor}</code></td><td><code>${a.action}</code></td><td class="${cls(a.outcome)}">${a.outcome}</td><td>${a.policy}</td><td><code>${a.hash} ← ${a.prev}</code></td></tr>`).join('')}
+async function sim(){const r=await call('simulate',{});
+  $('sim').innerHTML=`<p><b>Finance reviews: ${r.v1_reviews} → ${r.v2_reviews}</b> · dry-run writes: <b>${r.writes}</b> · v2 golden tests: <b class="${r.golden_v2_pass?'ok':'bad'}">${r.golden_v2_pass?'pass':'FAIL'}</b></p>
+  <table><thead><tr><th>Employee</th><th>Open reimb. (₹)</th><th>Status</th><th>v1</th><th>v2</th><th>Changes?</th></tr></thead><tbody>`+
+  r.rows.map(x=>`<tr><td>${x.emp}</td><td>${x.reimb}</td><td>${x.status} · ${x.dest} <span class="mut">(${x.scope})</span></td><td>${x.v1}</td><td>${x.v2}</td><td class="${x.changed?'warn':'mut'}">${x.changed?'NEW REVIEW':''}</td></tr>`).join('')+'</tbody></table>'}
+refresh();
+</script></body></html>
