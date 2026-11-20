@@ -13,11 +13,16 @@ const VIEWS = [
   ['audit', '⛓ Audit Log', 'Audit Log', 'A tamper-evident record of everything that happened. Each entry is sealed to the one before it.'],
 ]
 const THEMES = [['classic', 'Classic'], ['dark', 'Dark']]
-const load = (k, d) => { try { const v = localStorage.getItem(k); return THEMES.some(t => t[0] === v) ? v : d } catch { return d } }
+const load = (k, d) => {
+  const q = new URLSearchParams(location.search).get('theme')   // ?theme=dark deep link
+  if (THEMES.some(t => t[0] === q)) return q
+  try { const v = localStorage.getItem(k); return THEMES.some(t => t[0] === v) ? v : d } catch { return d }
+}
+const startView = () => { const h = location.hash.slice(1); return VIEWS.some(v => v[0] === h) ? h : 'dashboard' }   // #graph deep link
 
 export default function App() {
   const [s, setS] = useState(null)
-  const [view, setView] = useState('dashboard')
+  const [view, setView] = useState(startView)
   const [theme, setTheme] = useState(() => load('trusthr-theme', 'classic'))
   const [sim, setSim] = useState(null)
   const [toasts, setToasts] = useState([])
@@ -137,7 +142,7 @@ export default function App() {
         )}
 
         {view === 'graph' && (
-          <div className="grid g-main">
+          <div className="stack">
             <Card title="How the change spreads" lead="The transfer on the left triggers each box on the right. Dashed boxes need no action.">
               <Graph tasks={s.tasks} />
               <div className="row" style={{ marginTop: 14 }}>

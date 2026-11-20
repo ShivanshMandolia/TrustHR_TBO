@@ -6,9 +6,9 @@ const NODES = [
   { id: 'cost_centre_review', label: 'Cost-centre review', x: 300, y: 150 },
   { id: 'reimbursement_review', label: 'Reimbursement review', x: 300, y: 215 },
   { id: 'equipment_review', label: 'Equipment review', x: 300, y: 280 },
-  { id: 'manager_handover', label: 'Manager handover', x: 540, y: 20 },
+  { id: 'manager_handover', label: 'Manager handover', x: 580, y: 20 },
 ]
-const W = 160, H = 46
+const W = 190, H = 46
 const tone = s => ({ SUCCEEDED: 'ok', ACKED: 'ok', AWAITING_ACK: 'warn', PARKED: 'bad', SKIPPED: 'mut' }[s] || 'mut')
 const sub = t => !t ? 'not planned yet' : t.status === 'SKIPPED' ? 'no change needed' : (STATUS[t.status] || t.status).toLowerCase()
 
@@ -19,9 +19,9 @@ export default function Graph({ tasks }) {
     <path className={on ? 'live' : ''} d={`M${x1},${y1} C${(x1 + x2) / 2},${y1} ${(x1 + x2) / 2},${y2} ${x2},${y2}`} />
   return (
     <>
-      <svg className="graph" viewBox="0 0 720 335" role="img" aria-label="Lifecycle event graph">
+      <svg className="graph" viewBox="0 0 800 335" role="img" aria-label="Lifecycle event graph">
         {NODES.filter(n => n.id !== 'manager_handover').map(n => link(150, 160, n.x, n.y + H / 2, live && by[n.id]?.status !== 'SKIPPED'))}
-        {link(300 + W, 20 + H / 2, 540, 20 + H / 2, !!by.manager_handover)}
+        {link(300 + W, 20 + H / 2, 580, 20 + H / 2, !!by.manager_handover)}
         <g className="evt">
           <rect className="n" x="10" y="135" width="140" height="50" rx="10" />
           <text x="80" y="157" textAnchor="middle" fontWeight="600">Transferred</text>

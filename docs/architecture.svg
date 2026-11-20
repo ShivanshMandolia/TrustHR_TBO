@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" font-family="Georgia, serif" role="img" aria-label="TrustHR architecture">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6f6449"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7a1f2b"/></marker>
+  </defs>
+  <rect width="1000" height="620" fill="#efe9db"/>
+  <text x="500" y="38" text-anchor="middle" font-size="24" font-weight="700" fill="#2a2418">TrustHR architecture: governed by design</text>
+  <text x="500" y="60" text-anchor="middle" font-size="13" fill="#6f6449" font-family="system-ui,sans-serif">Agents never touch HR systems directly. Every action goes through one gateway.</text>
+
+  <!-- layer labels -->
+  <g font-family="system-ui,sans-serif" font-size="11" fill="#6f6449" letter-spacing="1.5">
+    <text x="24" y="102">EXPERIENCE</text><text x="24" y="232">BACKEND (demo/server.py)</text><text x="24" y="522">MOCK SYSTEMS</text>
+  </g>
+
+  <!-- experience -->
+  <g font-family="system-ui,sans-serif">
+    <rect x="130" y="82" width="200" height="62" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="230" y="108" text-anchor="middle" font-size="14" font-weight="600" fill="#2a2418">Employee / Manager</text><text x="230" y="127" text-anchor="middle" font-size="12" fill="#6f6449">asks in chat</text>
+    <rect x="400" y="82" width="200" height="62" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="500" y="108" text-anchor="middle" font-size="14" font-weight="600" fill="#2a2418">HR approver / admin</text><text x="500" y="127" text-anchor="middle" font-size="12" fill="#6f6449">approves, pauses, edits rules</text>
+    <rect x="670" y="82" width="200" height="62" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="770" y="108" text-anchor="middle" font-size="14" font-weight="600" fill="#2a2418">Team owners</text><text x="770" y="127" text-anchor="middle" font-size="12" fill="#6f6449">IT, Finance, new manager</text>
+    <rect x="130" y="168" width="740" height="40" rx="10" fill="#7a1f2b"/>
+    <text x="500" y="193" text-anchor="middle" font-size="14" font-weight="600" fill="#fbf8ef">React app (web/): Dashboard · Assistant · Event Graph · Policies · Audit Log</text>
+  </g>
+  <path d="M230,144 V168" stroke="#6f6449" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M500,144 V168" stroke="#6f6449" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M770,144 V168" stroke="#6f6449" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M500,208 V246" stroke="#6f6449" stroke-width="2" marker-end="url(#a)"/>
+  <text x="512" y="232" font-size="11" fill="#6f6449" font-family="system-ui,sans-serif">REST /api (Vite proxy)</text>
+
+  <!-- backend -->
+  <rect x="130" y="246" width="740" height="250" rx="14" fill="#f3edd9" stroke="#cfc4a6" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <g font-family="system-ui,sans-serif">
+    <rect x="150" y="268" width="210" height="96" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="255" y="294" text-anchor="middle" font-size="14" font-weight="700" fill="#2a2418">Event Graph + runner</text>
+    <text x="255" y="314" text-anchor="middle" font-size="12" fill="#6f6449">impact plan per event</text>
+    <text x="255" y="331" text-anchor="middle" font-size="12" fill="#6f6449">processed-events ledger</text>
+    <text x="255" y="348" text-anchor="middle" font-size="12" fill="#6f6449">dedupe → no duplicate work</text>
+
+    <rect x="640" y="268" width="210" height="96" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="745" y="294" text-anchor="middle" font-size="14" font-weight="700" fill="#2a2418">Policy-as-Code</text>
+    <text x="745" y="314" text-anchor="middle" font-size="12" fill="#6f6449">versioned rules v1 / v2</text>
+    <text x="745" y="331" text-anchor="middle" font-size="12" fill="#6f6449">golden tests gate activation</text>
+    <text x="745" y="348" text-anchor="middle" font-size="12" fill="#6f6449">+ read-only simulator, replay</text>
+
+    <rect x="390" y="268" width="220" height="96" rx="12" fill="#7a1f2b"/>
+    <text x="500" y="294" text-anchor="middle" font-size="15" font-weight="700" fill="#fbf8ef">Guardrail Gateway</text>
+    <text x="500" y="314" text-anchor="middle" font-size="12" fill="#f0dcd9">allow · require_human</text>
+    <text x="500" y="331" text-anchor="middle" font-size="12" fill="#f0dcd9">deny · paused (kill switch)</text>
+    <text x="500" y="348" text-anchor="middle" font-size="12" fill="#f0dcd9">fail-closed, reserved list</text>
+
+    <rect x="150" y="394" width="330" height="76" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="315" y="420" text-anchor="middle" font-size="14" font-weight="700" fill="#2a2418">Idempotent executor</text>
+    <text x="315" y="440" text-anchor="middle" font-size="12" fill="#6f6449">one receipt per key {event}:{node}</text>
+    <text x="315" y="457" text-anchor="middle" font-size="12" fill="#6f6449">retries never duplicate</text>
+
+    <rect x="520" y="394" width="330" height="76" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="685" y="420" text-anchor="middle" font-size="14" font-weight="700" fill="#2a2418">Hash-chained audit log</text>
+    <text x="685" y="440" text-anchor="middle" font-size="12" fill="#6f6449">who, what, decision, policy version</text>
+    <text x="685" y="457" text-anchor="middle" font-size="12" fill="#6f6449">each entry sealed to the previous</text>
+  </g>
+  <!-- internal arrows -->
+  <path d="M360,316 H390" stroke="#7a1f2b" stroke-width="2.5" marker-end="url(#r)"/>
+  <path d="M640,316 H610" stroke="#6f6449" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M440,364 L380,394" stroke="#7a1f2b" stroke-width="2.5" marker-end="url(#r)"/>
+  <path d="M560,364 L620,394" stroke="#6f6449" stroke-width="2" marker-end="url(#a)" stroke-dasharray="4 3"/>
+
+  <!-- mocks -->
+  <g font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#2a2418">
+    <rect x="130" y="536" width="165" height="52" rx="10" fill="#e1ecd8" stroke="#2d6a3e"/><text x="212" y="567" text-anchor="middle">Directory</text>
+    <rect x="320" y="536" width="165" height="52" rx="10" fill="#e1ecd8" stroke="#2d6a3e"/><text x="402" y="567" text-anchor="middle">IT tickets</text>
+    <rect x="510" y="536" width="165" height="52" rx="10" fill="#e1ecd8" stroke="#2d6a3e"/><text x="592" y="567" text-anchor="middle">Finance tasks</text>
+    <rect x="700" y="536" width="170" height="52" rx="10" fill="#e1ecd8" stroke="#2d6a3e"/><text x="785" y="567" text-anchor="middle">Manager notices</text>
+  </g>
+  <path d="M315,470 V536" stroke="#7a1f2b" stroke-width="2.5" marker-end="url(#r)"/>
+  <text x="326" y="508" font-size="11" fill="#7a1f2b" font-family="system-ui,sans-serif">only via gateway "allow"</text>
+</svg>

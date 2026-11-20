@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 470" font-family="system-ui,sans-serif" role="img" aria-label="TR-104 transfer workflow">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6f6449"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7a1f2b"/></marker>
+  </defs>
+  <rect width="1000" height="470" fill="#efe9db"/>
+  <text x="500" y="36" text-anchor="middle" font-family="Georgia,serif" font-size="24" font-weight="700" fill="#2a2418">Workflow: Sales → Finance transfer (TR-104)</text>
+
+  <!-- main lane -->
+  <g font-size="13" fill="#2a2418">
+    <rect x="20" y="80" width="140" height="92" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <circle cx="40" cy="98" r="11" fill="#7a1f2b"/><text x="40" y="102" text-anchor="middle" fill="#fbf8ef" font-weight="700">1</text>
+    <text x="90" y="124" text-anchor="middle" font-weight="700">Request</text><text x="90" y="143" text-anchor="middle" fill="#6f6449" font-size="12">Manager asks in chat</text><text x="90" y="158" text-anchor="middle" fill="#6f6449" font-size="12">case AWAITING_APPROVAL</text>
+
+    <rect x="190" y="80" width="140" height="92" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <circle cx="210" cy="98" r="11" fill="#7a1f2b"/><text x="210" y="102" text-anchor="middle" fill="#fbf8ef" font-weight="700">2</text>
+    <text x="260" y="124" text-anchor="middle" font-weight="700">HR approval</text><text x="260" y="143" text-anchor="middle" fill="#6f6449" font-size="12">reserved: named human</text><text x="260" y="158" text-anchor="middle" fill="#6f6449" font-size="12">only, never an agent</text>
+
+    <rect x="360" y="80" width="140" height="92" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <circle cx="380" cy="98" r="11" fill="#7a1f2b"/><text x="380" y="102" text-anchor="middle" fill="#fbf8ef" font-weight="700">3</text>
+    <text x="430" y="124" text-anchor="middle" font-weight="700">Commit + event</text><text x="430" y="143" text-anchor="middle" fill="#6f6449" font-size="12">save HR record, emit</text><text x="430" y="158" text-anchor="middle" fill="#6f6449" font-size="12">Transferred event</text>
+
+    <rect x="530" y="80" width="140" height="92" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <circle cx="550" cy="98" r="11" fill="#7a1f2b"/><text x="550" y="102" text-anchor="middle" fill="#fbf8ef" font-weight="700">4</text>
+    <text x="600" y="124" text-anchor="middle" font-weight="700">Plan</text><text x="600" y="143" text-anchor="middle" fill="#6f6449" font-size="12">impact plan + policy</text><text x="600" y="158" text-anchor="middle" fill="#6f6449" font-size="12">decision (no LLM)</text>
+
+    <rect x="700" y="80" width="140" height="92" rx="12" fill="#7a1f2b"/>
+    <circle cx="720" cy="98" r="11" fill="#fbf8ef"/><text x="720" y="102" text-anchor="middle" fill="#7a1f2b" font-weight="700">5</text>
+    <text x="770" y="124" text-anchor="middle" font-weight="700" fill="#fbf8ef">Execute</text><text x="770" y="143" text-anchor="middle" fill="#f0dcd9" font-size="12">each task passes the</text><text x="770" y="158" text-anchor="middle" fill="#f0dcd9" font-size="12">Guardrail Gateway</text>
+
+    <rect x="870" y="80" width="116" height="92" rx="12" fill="#e1ecd8" stroke="#2d6a3e" stroke-width="1.5"/>
+    <circle cx="890" cy="98" r="11" fill="#2d6a3e"/><text x="890" y="102" text-anchor="middle" fill="#fff" font-weight="700">6</text>
+    <text x="935" y="124" text-anchor="middle" font-weight="700">Complete</text><text x="935" y="143" text-anchor="middle" fill="#6f6449" font-size="12">all tasks done</text><text x="935" y="158" text-anchor="middle" fill="#6f6449" font-size="12">or skipped</text>
+  </g>
+  <g stroke="#6f6449" stroke-width="2" fill="none" marker-end="url(#a)">
+    <path d="M160,126 H188"/><path d="M330,126 H358"/><path d="M500,126 H528"/><path d="M670,126 H698"/><path d="M840,126 H868"/>
+  </g>
+
+  <!-- guardrail cases -->
+  <text x="20" y="222" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#2a2418">What the safety layers do along the way</text>
+  <g font-size="13" fill="#2a2418">
+    <rect x="20" y="238" width="300" height="196" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="36" y="264" font-weight="700" fill="#7a1f2b">Agent tries a reserved action</text>
+    <text x="36" y="288" fill="#6f6449" font-size="12.5">e.g. change a role or salary</text>
+    <text x="36" y="312">→ Gateway verdict: <tspan font-weight="700" fill="#8a5a00">require_human</tspan></text>
+    <text x="36" y="334">→ Approval request queued for HR</text>
+    <text x="36" y="356">→ Nothing executes</text>
+    <text x="36" y="378">→ Audit entry written</text>
+    <text x="36" y="410" fill="#6f6449" font-size="12">Enforced by architecture, not a prompt.</text>
+
+    <rect x="350" y="238" width="300" height="196" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="366" y="264" font-weight="700" fill="#7a1f2b">Duplicate event arrives</text>
+    <text x="366" y="288" fill="#6f6449" font-size="12.5">same employee + type + date + payload</text>
+    <text x="366" y="312">→ Same event id (hash)</text>
+    <text x="366" y="334">→ Found in processed-events ledger</text>
+    <text x="366" y="356">→ <tspan font-weight="700" fill="#8a5a00">Ignored (duplicate)</tspan></text>
+    <text x="366" y="378">→ Task count stays the same</text>
+    <text x="366" y="410" fill="#6f6449" font-size="12">Executor also keys receipts by {event}:{node}.</text>
+
+    <rect x="680" y="238" width="300" height="196" rx="12" fill="#fbf8ef" stroke="#cfc4a6" stroke-width="1.5"/>
+    <text x="696" y="264" font-weight="700" fill="#7a1f2b">HR pauses automation</text>
+    <text x="696" y="288" fill="#6f6449" font-size="12.5">kill switch on</text>
+    <text x="696" y="312">→ Next gateway call: <tspan font-weight="700" fill="#9c2a1f">paused</tspan></text>
+    <text x="696" y="334">→ Tasks park (not lost, not failed)</text>
+    <text x="696" y="356">→ HR resumes</text>
+    <text x="696" y="378">→ Parked tasks are released</text>
+    <text x="696" y="410" fill="#6f6449" font-size="12">Dependent tasks wait for their prerequisite.</text>
+  </g>
+  <path d="M770,172 V238" stroke="#7a1f2b" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#r)"/>
+  <path d="M430,172 V238" stroke="#7a1f2b" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#r)"/>
+  <path d="M260,172 V238" stroke="#7a1f2b" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#r)"/>
+</svg>
