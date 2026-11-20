@@ -235,11 +235,26 @@ class H(BaseHTTPRequestHandler):
         n = int(self.headers.get("Content-Length", 0))
         body = json.loads(self.rfile.read(n) or b"{}")
         self.send(api(self.path, body))
+    def _cors(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self._cors()
+        self.end_headers()
+
     def send(self, obj):
         data = json.dumps(obj).encode()
-        self.send_response(200); self.send_header("Content-Type", "application/json"); self.end_headers(); self.wfile.write(data)
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self._cors()
+        self.end_headers()
+        self.wfile.write(data)
 
 if __name__ == "__main__":
     reset()
-    print("TrustHR demo on http://localhost:8000")
-    ThreadingHTTPServer(("127.0.0.1", 8000), H).serve_forever()
+    port = int(os.environ.get("PORT", 8000))
+    print(f"TrustHR demo on http://0.0.0.0:{port}")
+    ThreadingHTTPServer(("0.0.0.0", port), H).serve_forever()
