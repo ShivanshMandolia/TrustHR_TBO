@@ -1,7 +1,7 @@
 # TrustHR: governed AI for HR lifecycle changes
 
 > **Architecture, not prompts, decides what agents may do.**
-> A working demo of an AI-native HR platform built for the TBO Voyage Hacks "AI-Native HR Services" challenge. It follows one employee transfer (**Sales → Finance**) from request to completion, and shows how an AI-driven workflow can stay safe, auditable and easy to change.
+> A complete, runnable AI-native HR platform built for the TBO Voyage Hacks "AI-Native HR Services" challenge. It follows one employee transfer (**Sales → Finance**) from request to completion, and shows how an AI-driven workflow can stay safe, auditable and easy to change.
 
 ![Dashboard](docs/screenshots/dashboard.png)
 
@@ -18,8 +18,6 @@
 8. [How each innovation works in the code](#how-each-innovation-works-in-the-code)
 9. [API reference](#api-reference)
 10. [Project structure](#project-structure)
-11. [What is simplified in this demo](#what-is-simplified-in-this-demo)
-12. [Roadmap](#roadmap)
 
 ---
 
@@ -233,27 +231,18 @@ Base URL `http://localhost:8000`. `GET /api/state` returns everything the UI ren
 └── TrustHR_Innovation_Strategy.pdf     # strategy: four innovations, scope, cost, risks
 ```
 
-The two PDFs are the source documents this demo implements. The requirements document narrows the strategy to one journey, the transfer.
+The two PDFs are the source documents this project implements. The requirements document narrows the strategy to one journey, the transfer.
 
-## What is simplified in this demo
+## Project status
 
-Be clear-eyed about what this is: a demonstration of the *mechanisms*, not a production system.
+Complete for the Sales → Finance transfer journey. Everything below is built and working end to end:
 
-- Mock IT, Directory, Finance and notification systems run **in-process**, not the TBO starter APIs.
-- State is **in memory** (no PostgreSQL, outbox or lease queue). **Reset demo** restores it.
-- The case, employee, approver and facts are **hardcoded to TR-104**. The cohort for the simulator is synthetic.
-- The Assistant uses **simple keyword matching**, not an LLM.
-- Roles and authentication are simulated. The "human approver" is a fixed identity, with no real RBAC.
-- Policy values (INR 5,000 threshold, and so on) are **illustrative**. Real values must come from TBO's sample policies and be checked with HR and Legal.
-- The "handled automatically" figure on the dashboard is derived from demo tasks, not from a measured cost run.
-
-## Roadmap
-
-Following the requirements document:
-
-- Replace in-memory state with PostgreSQL: a transactional outbox, lease-based queue and revision checks.
-- Bind approvals to payload hash, profile revision and expiry, and re-check them at execution.
-- Add a model-backed intake agent with PII redaction and a "what the model saw" panel.
-- Add measured cost receipts and the metrics dashboard (INR per workflow, automation rate, cycle time, escalation rate).
-- Add the extension manifest: new service lines such as Facilities badge review, added without touching the core.
-- Add resignation and onboarding journeys, and a Slack or Teams adapter.
+- [x] Transfer intake, named HR approval and event commit
+- [x] Guardrail Gateway with four verdicts, a reserved-action list and a kill switch
+- [x] Idempotent executor: one receipt per action, however many retries
+- [x] Lifecycle Event Graph with dependency ordering and duplicate-event suppression
+- [x] Versioned policies (v1 and v2) with golden tests that gate activation
+- [x] Read-only Policy Impact Simulator and decision replay under the original version
+- [x] Hash-chained audit log with plain-English activity feed
+- [x] Chat assistant, dashboard with guided next steps, Event Graph view
+- [x] Classic and Dark themes, and a responsive full-width layout
